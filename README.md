@@ -17,6 +17,15 @@ _sudo apt-get install libfmt-dev_
 For date library, clone the following repository:<br/>
 https://github.com/HowardHinnant/date
 
+For X11 windowing system install the x11 library:<br/>
+_sudo apt-get install libx11-dev_
+
+It's also necessery to install mesa-utils:<br/>
+_sudo apt-get install mesa-utils_
+
+It won't hurt to install also glm library for any math's related operations:<br/>
+_sudo apt-get install libglm-dev_
+
 # License
 Copyright 2021 Arturs Kalnins
 
