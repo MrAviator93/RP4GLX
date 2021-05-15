@@ -23,7 +23,7 @@ _sudo apt-get install libx11-dev_
 It's also necessery to install mesa-utils:<br/>
 _sudo apt-get install mesa-utils_
 
-It won't hurt to install also glm library for any math's related operations:<br/>
+Additionaly, it won't hurt to install glm library for any math's related operations:<br/>
 _sudo apt-get install libglm-dev_
 
 # License
