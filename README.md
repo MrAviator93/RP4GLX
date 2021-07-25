@@ -1,7 +1,7 @@
 # RP4GLX - Raspberry Pi 4 OpenGLX
 A project that demonstrates how to create a X11 window on RP4 and execute OpenGL commands.
 
-![Alt text](Screenshot.png?raw=true "Title")
+![RPI4 GLX ES3.1](Screenshot.png?raw=true "RPI4 GLX ES3.1")
 
 # Requirements
 A C++ compiler that supports C++ 17 revision, Boost C++ libraries and fmt formatting library.
