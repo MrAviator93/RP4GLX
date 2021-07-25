@@ -18,7 +18,6 @@ namespace BEngine
 	//
 	// Windows window class wrapper, uses X11 library for implementation.
 	//-----------------------------------------------------------------------
-
 	class CWindowX11 
     {
         friend class CX11MessageCallback;

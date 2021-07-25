@@ -15,7 +15,6 @@ namespace BEngine
 	// Base abstract window class that must be inherited 
 	// by other window implementations.
 	//-----------------------------------------------------------------------
-
 	class IWindow
 	{
 	public:

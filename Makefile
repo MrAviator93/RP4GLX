@@ -18,7 +18,7 @@ all: main_prog
 main_prog:
 	clear
 	@echo "Compiling the main ..."
-	$(CC) $(CINC_DIR) $(CLIB_DIR) $(CFLAGS) $(CLIBS) -o main.out main.cpp GLXDevice.cpp WindowX11.cpp
+	$(CC) $(CINC_DIR) $(CLIB_DIR) $(CFLAGS) $(CLIBS) main.cpp GLXDevice.cpp WindowX11.cpp -o main.out
 
 clean:
 	rm -rf *.bin main.out

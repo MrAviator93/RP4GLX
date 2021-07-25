@@ -20,7 +20,6 @@ namespace BEngine::Graphics
 	//
 	// OpenGL ES Device Wrapper class.
     //-----------------------------------------------------------------------
-
     class CGLXDevice
     {
         public:
