@@ -51,23 +51,23 @@ FILE UTMOST REVIEW DONE ON (23.01.2021) BY ARTUR K.
 
 int main( int argc, char* argv[] )
 {
-    fmt::print( "Welcome to Raspbery PI 4 OpenGL!\n" );
+	fmt::print( "Welcome to Raspbery PI 4 OpenGL!\n" );
 
-    BEngine::CWindowX11 window;
+	BEngine::CWindowX11 window;
 
-    // Set-up OpenGL ES
-    BEngine::Graphics::CGLXDevice glxDevice{ window.getWindowHandle() };
-    glxDevice.viewport( 0, 0, 1200, 800 );
-    glxDevice.clearColourDepthStencil();
-    glxDevice.clearColour( 0.24, 0.14, 0.24, 1.0f );
+	// Set-up OpenGL ES
+	BEngine::Graphics::CGLXDevice glxDevice{ window.getWindowHandle() };
+	glxDevice.viewport( 0, 0, 1200, 800 );
+	glxDevice.clearColourDepthStencil();
+	glxDevice.clearColour( 0.24, 0.14, 0.24, 1.0f );
 
-    while ( window.running() )
-    {
-        window.update();
-        glxDevice.clearColourDepthStencil();
-        glxDevice.clearColour( 0.24, 0.14, 0.24, 1.0f );
-        glxDevice.swapBuffers();
-    }
+	while( window.running() )
+	{
+		window.update();
+		glxDevice.clearColourDepthStencil();
+		glxDevice.clearColour( 0.24, 0.14, 0.24, 1.0f );
+		glxDevice.swapBuffers();
+	}
 
-    return 0;
+	return 0;
 }

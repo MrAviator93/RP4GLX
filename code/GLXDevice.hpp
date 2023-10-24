@@ -1,7 +1,7 @@
 /***********************************************************************
 FILE GLXDEVICE.HPP CONTAINS SIMPLE GLX-EGL DEVICE IMPLEMENTATION
 
-FILE UTMOST REVIEW DONE ON (24.01.2021) BY ARTUR K. 
+FILE UTMOST REVIEW DONE ON (24.01.2021) BY ARTUR K.
 ***********************************************************************/
 
 #ifndef BENGINE_GRAPHICS_GLX_DEVICE_HPP__
@@ -13,34 +13,34 @@ FILE UTMOST REVIEW DONE ON (24.01.2021) BY ARTUR K.
 
 #include <cstdint>
 
-namespace BEngine::Graphics 
+namespace BEngine::Graphics
 {
-    //-----------------------------------------------------------------------
-	// OPEN GLX DEVICE
-	//
-	// OpenGL ES Device Wrapper class.
-    //-----------------------------------------------------------------------
-    class CGLXDevice
-    {
-        public:
-            explicit CGLXDevice( void* pWindowHandle ) noexcept ( false );
+//-----------------------------------------------------------------------
+// OPEN GLX DEVICE
+//
+// OpenGL ES Device Wrapper class.
+//-----------------------------------------------------------------------
+class CGLXDevice
+{
+public:
+	explicit CGLXDevice( void* pWindowHandle ) noexcept( false );
 
-            ~CGLXDevice();
+	~CGLXDevice();
 
-            void viewport(int x, int y, std::uint32_t width, std::uint32_t height);
-            void clearColour(float r, float g, float b, float a = 1.0f);
+	void viewport( int x, int y, std::uint32_t width, std::uint32_t height );
+	void clearColour( float r, float g, float b, float a = 1.0f );
 
-            void clear( std::uint32_t mask );
-            void clearColourDepthStencil();
+	void clear( std::uint32_t mask );
+	void clearColourDepthStencil();
 
-            void swapBuffers();
+	void swapBuffers();
 
-        private:
-            EGLDisplay m_display;
-            EGLConfig m_config;
-            EGLSurface m_surface;
-            EGLContext m_context;
-    };
+private:
+	EGLDisplay m_display;
+	EGLConfig m_config;
+	EGLSurface m_surface;
+	EGLContext m_context;
+};
 
-} //namespace BEngine::Graphics 
+} // namespace BEngine::Graphics
 #endif // BENGINE_GRAPHICS_GLX_DEVICE_HPP__

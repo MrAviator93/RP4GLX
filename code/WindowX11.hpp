@@ -11,43 +11,38 @@ FILE UTMOST REVIEW DONE ON (24.01.2021) BY ARTUR K.
 
 struct _XDisplay;
 
-namespace BEngine 
+namespace BEngine
 {
-    //-----------------------------------------------------------------------
-	// LINUX X11 WINDOW WRAPPER CLASS
-	//
-	// Windows window class wrapper, uses X11 library for implementation.
-	//-----------------------------------------------------------------------
-	class CWindowX11 
-    {
-        friend class CX11MessageCallback;
-    public:
-        CWindowX11();
-        ~CWindowX11();
+//-----------------------------------------------------------------------
+// LINUX X11 WINDOW WRAPPER CLASS
+//
+// Windows window class wrapper, uses X11 library for implementation.
+//-----------------------------------------------------------------------
+class CWindowX11
+{
+	friend class CX11MessageCallback;
 
-        void update();
+public:
+	CWindowX11();
+	~CWindowX11();
 
-        std::uint32_t clientWidth() const;
-        std::uint32_t clientHeight() const;
+	void update();
 
-        bool running() const 
-        {
-            return m_running;
-        }
+	std::uint32_t clientWidth() const;
+	std::uint32_t clientHeight() const;
 
-        void* getWindowHandle() const
-        {
-            return m_pWindowHandle;
-        }
+	bool running() const { return m_running; }
 
-    private:
-        void createWindow() noexcept ( false );
+	void* getWindowHandle() const { return m_pWindowHandle; }
 
-        _XDisplay* pDisplay{ nullptr };
-        void* m_pWindowHandle { nullptr }; // Window
-        bool m_running { false };
-        std::uint64_t wmDeleteMessage;
-    };
+private:
+	void createWindow() noexcept( false );
 
-} // namespace BEngine 
+	_XDisplay* pDisplay{ nullptr };
+	void* m_pWindowHandle{ nullptr }; // Window
+	bool m_running{ false };
+	std::uint64_t wmDeleteMessage;
+};
+
+} // namespace BEngine
 #endif // BENGINE_WINDOW_X11_HPP__
