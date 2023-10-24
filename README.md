@@ -19,7 +19,8 @@ A project that demonstrates how to create a X11 window on RP4 and execute OpenGL
 
 ## Requirements
 
-A C++ compiler that supports C++ 17 revision, Boost C++ libraries and fmt formatting library.
+- A C++20 compliant compiler (GCC-13.2, Clang-17, etc.).
+- Raspberry Pi 4
 
 ### Boost
 
