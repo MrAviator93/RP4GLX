@@ -9,16 +9,29 @@ A project that demonstrates how to create a X11 window on RP4 and execute OpenGL
 - [RP4GLX - Raspberry Pi 4 OpenGLX](#rp4glx---raspberry-pi-4-openglx)
   - [Table of contents](#table-of-contents)
   - [Requirements](#requirements)
+    - [Boost](#boost)
+    - [Fmt](#fmt)
+    - [Date](#date)
+    - [X11](#x11)
+    - [Glm](#glm)
+    - [Mesa Utils](#mesa-utils)
   - [License](#license)
 
 ## Requirements
 
 A C++ compiler that supports C++ 17 revision, Boost C++ libraries and fmt formatting library.
 
+### Boost
+
 Use the following command to install boost libraries:
-_sudo apt-get install libboost*.**-dev_
+
+```bash
+sudo apt-get install libboost*.**-dev
+```
 
 For latest version of boost libraries see <https://www.boost.org/>
+
+### Fmt
 
 For fmtlib, clone the following repository <https://github.com/fmtlib/fmt> or install using package manager
 
@@ -26,7 +39,11 @@ For fmtlib, clone the following repository <https://github.com/fmtlib/fmt> or in
 sudo apt-get install libfmt-dev
 ```
 
+### Date
+
 For date library, clone the following repository <https://github.com/HowardHinnant/date>
+
+### X11
 
 For X11 windowing system install the x11 library:
 
@@ -34,16 +51,20 @@ For X11 windowing system install the x11 library:
 sudo apt-get install libx11-dev
 ```
 
-It's also necessery to install mesa-utils:
-
-```bash
-sudo apt-get install mesa-utils
-```
+### Glm
 
 Additionaly, it won't hurt to install glm library for any math's related operations:
 
 ```bash
 sudo apt-get install libglm-dev
+```
+
+### Mesa Utils
+
+It's also necessery to install mesa-utils:
+
+```bash
+sudo apt-get install mesa-utils
 ```
 
 ## License
