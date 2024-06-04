@@ -1,15 +1,19 @@
-
-#include "GLXDevice.hpp"
+#include "GlxDevice.hpp"
 
 #include <X11/Xlib.h>
 #include <fmt/format.h>
 #include <date/date.h>
 
+// C++
 #include <iostream>
 #include <stdexcept>
 
-namespace BEngine::Graphics
+namespace bbx::graphics
 {
+
+namespace
+{
+
 static const EGLint attribute_list[] = { EGL_RED_SIZE,
 										 8,
 										 EGL_GREEN_SIZE,
@@ -24,7 +28,9 @@ static const EGLint attribute_list[] = { EGL_RED_SIZE,
 
 static const EGLint context_attributes[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_CONTEXT_MINOR_VERSION, 1, EGL_NONE };
 
-CGLXDevice::CGLXDevice( void* pWindowHandle ) noexcept( false )
+} // namespace
+
+GlxDevice::GlxDevice( void* pWindowHandle ) noexcept( false )
 {
 	// All this initialization code
 	// could be moved to a new class
@@ -95,36 +101,36 @@ CGLXDevice::CGLXDevice( void* pWindowHandle ) noexcept( false )
 	//fmt::print("OpenGL extensions: {}\n", glGetString( GL_EXTENSIONS ) );
 }
 
-CGLXDevice::~CGLXDevice()
+GlxDevice::~GlxDevice()
 {
 	eglDestroyContext( m_display, m_context );
 	eglDestroySurface( m_display, m_surface );
 	eglTerminate( m_display );
 }
 
-void CGLXDevice::viewport( int x, int y, std::uint32_t width, std::uint32_t height )
+void GlxDevice::viewport( int x, int y, std::uint32_t width, std::uint32_t height )
 {
 	glViewport( x, y, width, height );
 }
 
-void CGLXDevice::clearColour( float r, float g, float b, float a )
+void GlxDevice::clearColour( float r, float g, float b, float a )
 {
 	glClearColor( r, g, b, a );
 }
 
-void CGLXDevice::clear( std::uint32_t mask )
+void GlxDevice::clear( std::uint32_t mask )
 {
 	glClear( mask );
 }
 
-void CGLXDevice::clearColourDepthStencil()
+void GlxDevice::clearColourDepthStencil()
 {
 	glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 }
 
-void CGLXDevice::swapBuffers()
+void GlxDevice::swapBuffers()
 {
 	eglSwapBuffers( m_display, m_surface );
 }
 
-} //namespace BEngine::Graphics
+} //namespace bbx::graphics

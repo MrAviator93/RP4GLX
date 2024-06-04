@@ -1,4 +1,4 @@
-# RP4GLX - Raspberry Pi 4 OpenGLX
+# Raspberry Pi 4 & 5 Open Glx Tutorial
 
 A project that demonstrates how to create a X11 window on RP4 and execute OpenGL commands.
 
@@ -6,7 +6,7 @@ A project that demonstrates how to create a X11 window on RP4 and execute OpenGL
 
 ## Table of contents
 
-- [RP4GLX - Raspberry Pi 4 OpenGLX](#rp4glx---raspberry-pi-4-openglx)
+- [Raspberry Pi 4 \& 5 Open Glx Tutorial](#raspberry-pi-4--5-open-glx-tutorial)
   - [Table of contents](#table-of-contents)
   - [Requirements](#requirements)
     - [Boost](#boost)
@@ -15,6 +15,7 @@ A project that demonstrates how to create a X11 window on RP4 and execute OpenGL
     - [X11](#x11)
     - [Glm](#glm)
     - [Mesa Utils](#mesa-utils)
+  - [Resources](#resources)
   - [License](#license)
 
 ## Requirements
@@ -68,9 +69,14 @@ It's also necessery to install mesa-utils:
 sudo apt-get install mesa-utils
 ```
 
+## Resources
+
+<https://wiki.maemo.org/SimpleGL_example>
+<http://manpages.ubuntu.com/manpages/bionic/en/man3/XCreateWindow.3.html>
+
 ## License
 
-Copyright 2021 Arturs Kalnins
+Copyright 2024 MrAviator93
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

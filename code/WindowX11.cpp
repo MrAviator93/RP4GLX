@@ -5,22 +5,24 @@
 #include <X11/keysymdef.h>
 #include <X11/Xatom.h>
 
+// C++
 #include <iostream>
 #include <stdexcept>
 
-namespace BEngine
+namespace bbx
 {
-CWindowX11::CWindowX11()
+
+WindowX11::WindowX11()
 {
 	createWindow();
 }
 
-CWindowX11::~CWindowX11()
+WindowX11::~WindowX11()
 {
 	// TODO: Destroy all the stuff ...
 }
 
-void CWindowX11::createWindow() noexcept( false )
+void WindowX11::createWindow() noexcept( false )
 {
 	pDisplay = XOpenDisplay( reinterpret_cast< char* >( 0 ) );
 	if( !pDisplay )
@@ -86,21 +88,21 @@ void CWindowX11::createWindow() noexcept( false )
 	m_running = true;
 }
 
-std::uint32_t CWindowX11::clientWidth() const
+std::uint32_t WindowX11::clientWidth() const
 {
 	XWindowAttributes gwa;
 	XGetWindowAttributes( pDisplay, *reinterpret_cast< Window* >( m_pWindowHandle ), &gwa );
 	return static_cast< std::uint32_t >( gwa.width );
 }
 
-std::uint32_t CWindowX11::clientHeight() const
+std::uint32_t WindowX11::clientHeight() const
 {
 	XWindowAttributes gwa;
 	XGetWindowAttributes( pDisplay, *reinterpret_cast< Window* >( m_pWindowHandle ), &gwa );
 	return static_cast< std::uint32_t >( gwa.height );
 }
 
-void CWindowX11::update()
+void WindowX11::update()
 {
 	XEvent event;
 	XNextEvent( pDisplay, &event );
@@ -133,4 +135,4 @@ void CWindowX11::update()
 	}
 }
 
-} // namespace BEngine
+} // namespace bbx

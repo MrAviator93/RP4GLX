@@ -1,48 +1,39 @@
-/***********************************************************************
-FILE WINDOWX11.HPP CONTAINS LINUX OPERATING SYSTEM WINDOW IMPLEMENTATION
+#ifndef BBX_WINDOW_X11_HPP__
+#define BBX_WINDOW_X11_HPP__
 
-FILE UTMOST REVIEW DONE ON (24.01.2021) BY ARTUR K. 
-***********************************************************************/
-
-#ifndef BENGINE_WINDOW_X11_HPP__
-#define BENGINE_WINDOW_X11_HPP__
-
+// C++
 #include <cstdint>
 
 struct _XDisplay;
 
-namespace BEngine
+namespace bbx
 {
-//-----------------------------------------------------------------------
-// LINUX X11 WINDOW WRAPPER CLASS
-//
-// Windows window class wrapper, uses X11 library for implementation.
-//-----------------------------------------------------------------------
-class CWindowX11
+
+/// Windows window class wrapper, uses X11 library for implementation.
+class WindowX11
 {
-	friend class CX11MessageCallback;
+	struct Impl;
 
 public:
-	CWindowX11();
-	~CWindowX11();
+	WindowX11();
+	~WindowX11();
 
 	void update();
 
-	std::uint32_t clientWidth() const;
-	std::uint32_t clientHeight() const;
-
-	bool running() const { return m_running; }
-
-	void* getWindowHandle() const { return m_pWindowHandle; }
+	[[nodiscard]] std::uint32_t clientWidth() const;
+	[[nodiscard]] std::uint32_t clientHeight() const;
+	[[nodiscard]] bool running() const { return m_running; }
+	[[nodiscard]] void* handle() const { return m_pWindowHandle; }
 
 private:
 	void createWindow() noexcept( false );
 
+private:
 	_XDisplay* pDisplay{ nullptr };
 	void* m_pWindowHandle{ nullptr }; // Window
 	bool m_running{ false };
 	std::uint64_t wmDeleteMessage;
 };
 
-} // namespace BEngine
-#endif // BENGINE_WINDOW_X11_HPP__
+} // namespace bbx
+#endif // BBX_WINDOW_X11_HPP__
