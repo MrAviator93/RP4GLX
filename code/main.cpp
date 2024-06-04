@@ -54,6 +54,7 @@ int main( const int argc, const char* const* const argv )
 		window.update();
 		glxDevice.clearColourDepthStencil();
 		glxDevice.clearColour( 0.24, 0.14, 0.24, 1.0f );
+		glxDevice.render();
 		glxDevice.swapBuffers();
 	}
 

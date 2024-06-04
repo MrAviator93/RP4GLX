@@ -2,7 +2,7 @@
 
 A project that demonstrates how to create a X11 window on RP4 and execute OpenGL commands.
 
-![RPI4 GLX ES3.1](data/screenshot.png?raw=true "RPI4 GLX ES3.1")
+![RPI 4 & 5 GLX ES3.1](data/screenshot_2.png?raw=true "RPI 4 & 5 GLX ES3.1")
 
 ## Table of contents
 
