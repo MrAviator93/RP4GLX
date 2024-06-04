@@ -4,6 +4,10 @@
 #include <fmt/format.h>
 #include <date/date.h>
 
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#include <GLES3/gl3.h>
+
 // C++
 #include <iostream>
 #include <stdexcept>
@@ -30,7 +34,16 @@ static const EGLint context_attributes[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_
 
 } // namespace
 
+struct GlxDevice::Impl
+{
+	EGLDisplay display;
+	EGLConfig config;
+	EGLSurface surface;
+	EGLContext context;
+};
+
 GlxDevice::GlxDevice( void* pWindowHandle ) noexcept( false )
+	: m_pImpl{ std::make_unique< Impl >() }
 {
 	// All this initialization code
 	// could be moved to a new class
@@ -46,18 +59,18 @@ GlxDevice::GlxDevice( void* pWindowHandle ) noexcept( false )
 		throw std::runtime_error( "ERROR: Window handle is nullptr.\n" );
 	}
 
-	m_display = eglGetDisplay( EGL_DEFAULT_DISPLAY );
+	m_pImpl->display = eglGetDisplay( EGL_DEFAULT_DISPLAY );
 
 	// Initialize EGL
-	if( !eglInitialize( m_display, nullptr, nullptr ) )
+	if( !eglInitialize( m_pImpl->display, nullptr, nullptr ) )
 	{
 		throw std::runtime_error( "ERROR: Couldn't initialize OpenGL ES.\n" );
 	}
 
-	EGLint num_config{};
+	EGLint numCconfig{};
 
 	// Get an appropriate EGL frame buffer configuration
-	if( !eglChooseConfig( m_display, attribute_list, &m_config, 1, &num_config ) )
+	if( !eglChooseConfig( m_pImpl->display, attribute_list, &m_pImpl->config, 1, &numCconfig ) )
 	{
 		throw std::runtime_error( "ERROR: Failed to choose config.\n" );
 	}
@@ -69,21 +82,22 @@ GlxDevice::GlxDevice( void* pWindowHandle ) noexcept( false )
 	}
 
 	// Create an EGL window surface
-	m_surface = eglCreateWindowSurface( m_display, m_config, *reinterpret_cast< Window* >( pWindowHandle ), NULL );
-	if( m_surface == EGL_NO_SURFACE )
+	m_pImpl->surface = eglCreateWindowSurface(
+		m_pImpl->display, m_pImpl->config, *reinterpret_cast< Window* >( pWindowHandle ), NULL );
+	if( m_pImpl->surface == EGL_NO_SURFACE )
 	{
 		throw std::runtime_error( "ERROR: Failed to create surface.\n" );
 	}
 
 	// Create an EGL rendering context
-	m_context = eglCreateContext( m_display, m_config, EGL_NO_CONTEXT, context_attributes );
-	if( m_context == EGL_NO_CONTEXT )
+	m_pImpl->context = eglCreateContext( m_pImpl->display, m_pImpl->config, EGL_NO_CONTEXT, context_attributes );
+	if( m_pImpl->context == EGL_NO_CONTEXT )
 	{
 		throw std::runtime_error( "ERROR: Failed to create rendering context.\n" );
 	}
 
 	// Associate the egl-context with the egl-surface
-	if( !eglMakeCurrent( m_display, m_surface, m_surface, m_context ) )
+	if( !eglMakeCurrent( m_pImpl->display, m_pImpl->surface, m_pImpl->surface, m_pImpl->context ) )
 	{
 		throw std::runtime_error( "ERROR: Failed to attach EGL rendering context to EGL surfaces.\n" );
 	}
@@ -103,9 +117,9 @@ GlxDevice::GlxDevice( void* pWindowHandle ) noexcept( false )
 
 GlxDevice::~GlxDevice()
 {
-	eglDestroyContext( m_display, m_context );
-	eglDestroySurface( m_display, m_surface );
-	eglTerminate( m_display );
+	eglDestroyContext( m_pImpl->display, m_pImpl->context );
+	eglDestroySurface( m_pImpl->display, m_pImpl->surface );
+	eglTerminate( m_pImpl->display );
 }
 
 void GlxDevice::viewport( int x, int y, std::uint32_t width, std::uint32_t height )
@@ -130,7 +144,7 @@ void GlxDevice::clearColourDepthStencil()
 
 void GlxDevice::swapBuffers()
 {
-	eglSwapBuffers( m_display, m_surface );
+	eglSwapBuffers( m_pImpl->display, m_pImpl->surface );
 }
 
 } //namespace bbx::graphics
