@@ -86,10 +86,10 @@ GlxDevice::GlxDevice( void* pWindowHandle ) noexcept( false )
 		throw std::runtime_error( "ERROR: Window handle is nullptr.\n" );
 	}
 
-	m_pImpl->display = eglGetDisplay( EGL_DEFAULT_DISPLAY );
+	m_pImpl->display = ::eglGetDisplay( EGL_DEFAULT_DISPLAY );
 
 	// Initialize EGL
-	if( !eglInitialize( m_pImpl->display, nullptr, nullptr ) )
+	if( !::eglInitialize( m_pImpl->display, nullptr, nullptr ) )
 	{
 		throw std::runtime_error( "ERROR: Couldn't initialize OpenGL ES.\n" );
 	}
@@ -97,19 +97,19 @@ GlxDevice::GlxDevice( void* pWindowHandle ) noexcept( false )
 	EGLint numCconfig{};
 
 	// Get an appropriate EGL frame buffer configuration
-	if( !eglChooseConfig( m_pImpl->display, attribute_list, &m_pImpl->config, 1, &numCconfig ) )
+	if( !::eglChooseConfig( m_pImpl->display, attribute_list, &m_pImpl->config, 1, &numCconfig ) )
 	{
 		throw std::runtime_error( "ERROR: Failed to choose config.\n" );
 	}
 
 	// Get an appropriate EGL frame buffer configuration
-	if( !eglBindAPI( EGL_OPENGL_ES_API ) )
+	if( !::eglBindAPI( EGL_OPENGL_ES_API ) )
 	{
 		throw std::runtime_error( "ERROR: Failed to bind OpenGL ES API.\n" );
 	}
 
 	// Create an EGL window surface
-	m_pImpl->surface = eglCreateWindowSurface(
+	m_pImpl->surface = ::eglCreateWindowSurface(
 		m_pImpl->display, m_pImpl->config, *reinterpret_cast< Window* >( pWindowHandle ), NULL );
 	if( m_pImpl->surface == EGL_NO_SURFACE )
 	{
@@ -117,26 +117,26 @@ GlxDevice::GlxDevice( void* pWindowHandle ) noexcept( false )
 	}
 
 	// Create an EGL rendering context
-	m_pImpl->context = eglCreateContext( m_pImpl->display, m_pImpl->config, EGL_NO_CONTEXT, context_attributes );
+	m_pImpl->context = ::eglCreateContext( m_pImpl->display, m_pImpl->config, EGL_NO_CONTEXT, context_attributes );
 	if( m_pImpl->context == EGL_NO_CONTEXT )
 	{
 		throw std::runtime_error( "ERROR: Failed to create rendering context.\n" );
 	}
 
 	// Associate the egl-context with the egl-surface
-	if( !eglMakeCurrent( m_pImpl->display, m_pImpl->surface, m_pImpl->surface, m_pImpl->context ) )
+	if( !::eglMakeCurrent( m_pImpl->display, m_pImpl->surface, m_pImpl->surface, m_pImpl->context ) )
 	{
 		throw std::runtime_error( "ERROR: Failed to attach EGL rendering context to EGL surfaces.\n" );
 	}
 
 	// check OpenGL vendor
-	fmt::print( "OpenGL vendor: {}\n", glGetString( GL_VENDOR ) );
+	// fmt::print( "OpenGL vendor: {}\n", glGetString( GL_VENDOR ) );
 
 	// check OpenGL vendor
-	fmt::print( "OpenGL vendor: {}\n", glGetString( GL_RENDERER ) );
+	// fmt::print( "OpenGL vendor: {}\n", glGetString( GL_RENDERER ) );
 
 	// check of OpenGL version
-	fmt::print( "OpenGL version: {}\n", glGetString( GL_VERSION ) );
+	// fmt::print( "OpenGL version: {}\n", glGetString( GL_VERSION ) );
 
 	// check for OpenGL extensions
 	//fmt::print("OpenGL extensions: {}\n", glGetString( GL_EXTENSIONS ) );
@@ -145,92 +145,92 @@ GlxDevice::GlxDevice( void* pWindowHandle ) noexcept( false )
 	GLfloat vertices[] = { 0.0f, 0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f };
 
 	// Create and compile the vertex shader
-	GLuint vertexShader = glCreateShader( GL_VERTEX_SHADER );
+	GLuint vertexShader = ::glCreateShader( GL_VERTEX_SHADER );
 	// const GLchar *const*string,
 	const char* vertexShaderSrc = kVertexShader.data();
-	glShaderSource( vertexShader, 1, &vertexShaderSrc, nullptr );
-	glCompileShader( vertexShader );
+	::glShaderSource( vertexShader, 1, &vertexShaderSrc, nullptr );
+	::glCompileShader( vertexShader );
 	// checkCompileErrors( vertexShader, "VERTEX" );
 
 	// Create and compile the fragment shader
-	GLuint fragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
+	GLuint fragmentShader = ::glCreateShader( GL_FRAGMENT_SHADER );
 	const char* fragmentShaderSrc = kFragmentShader.data();
-	glShaderSource( fragmentShader, 1, &fragmentShaderSrc, nullptr );
-	glCompileShader( fragmentShader );
+	::glShaderSource( fragmentShader, 1, &fragmentShaderSrc, nullptr );
+	::glCompileShader( fragmentShader );
 	// checkCompileErrors( fragmentShader, "FRAGMENT" );
 
 	// Link shaders to create the shader program
-	m_pImpl->shaderProgram = glCreateProgram();
-	glAttachShader( m_pImpl->shaderProgram, vertexShader );
-	glAttachShader( m_pImpl->shaderProgram, fragmentShader );
-	glLinkProgram( m_pImpl->shaderProgram );
+	m_pImpl->shaderProgram = ::glCreateProgram();
+	::glAttachShader( m_pImpl->shaderProgram, vertexShader );
+	::glAttachShader( m_pImpl->shaderProgram, fragmentShader );
+	::glLinkProgram( m_pImpl->shaderProgram );
 	// checkCompileErrors( m_pImpl->shaderProgram, "PROGRAM" );
 
 	// Delete the shaders as they're linked into our program now and no longer necessary
-	glDeleteShader( vertexShader );
-	glDeleteShader( fragmentShader );
+	::glDeleteShader( vertexShader );
+	::glDeleteShader( fragmentShader );
 
 	// Create VAO and VBO
-	glGenVertexArrays( 1, &m_pImpl->VAO );
-	glGenBuffers( 1, &m_pImpl->VBO );
+	::glGenVertexArrays( 1, &m_pImpl->VAO );
+	::glGenBuffers( 1, &m_pImpl->VBO );
 
 	// Bind VAO
-	glBindVertexArray( m_pImpl->VAO );
+	::glBindVertexArray( m_pImpl->VAO );
 
 	// Bind and set VBO data
-	glBindBuffer( GL_ARRAY_BUFFER, m_pImpl->VBO );
-	glBufferData( GL_ARRAY_BUFFER, sizeof( vertices ), vertices, GL_STATIC_DRAW );
+	::glBindBuffer( GL_ARRAY_BUFFER, m_pImpl->VBO );
+	::glBufferData( GL_ARRAY_BUFFER, sizeof( vertices ), vertices, GL_STATIC_DRAW );
 
 	// Configure vertex attributes
-	glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof( float ), (void*)0 );
-	glEnableVertexAttribArray( 0 );
+	::glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof( float ), (void*)0 );
+	::glEnableVertexAttribArray( 0 );
 
 	// Unbind VAO
-	glBindVertexArray( 0 );
+	::glBindVertexArray( 0 );
 }
 
 GlxDevice::~GlxDevice()
 {
-	glDeleteVertexArrays( 1, &m_pImpl->VAO );
-	glDeleteBuffers( 1, &m_pImpl->VBO );
-	glDeleteProgram( m_pImpl->shaderProgram );
+	::glDeleteVertexArrays( 1, &m_pImpl->VAO );
+	::glDeleteBuffers( 1, &m_pImpl->VBO );
+	::glDeleteProgram( m_pImpl->shaderProgram );
 
-	eglDestroyContext( m_pImpl->display, m_pImpl->context );
-	eglDestroySurface( m_pImpl->display, m_pImpl->surface );
-	eglTerminate( m_pImpl->display );
+	::eglDestroyContext( m_pImpl->display, m_pImpl->context );
+	::eglDestroySurface( m_pImpl->display, m_pImpl->surface );
+	::eglTerminate( m_pImpl->display );
 }
 
 void GlxDevice::viewport( int x, int y, std::uint32_t width, std::uint32_t height )
 {
-	glViewport( x, y, width, height );
+	::glViewport( x, y, width, height );
 }
 
 void GlxDevice::clearColour( float r, float g, float b, float a )
 {
-	glClearColor( r, g, b, a );
+	::glClearColor( r, g, b, a );
 }
 
 void GlxDevice::clear( std::uint32_t mask )
 {
-	glClear( mask );
+	::glClear( mask );
 }
 
 void GlxDevice::clearColourDepthStencil()
 {
-	glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+	::glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
 }
 
 void GlxDevice::render()
 {
-	glUseProgram( m_pImpl->shaderProgram );
-	glBindVertexArray( m_pImpl->VAO );
-	glDrawArrays( GL_TRIANGLES, 0, 3 );
-	glBindVertexArray( 0 );
+	::glUseProgram( m_pImpl->shaderProgram );
+	::glBindVertexArray( m_pImpl->VAO );
+	::glDrawArrays( GL_TRIANGLES, 0, 3 );
+	::glBindVertexArray( 0 );
 }
 
 void GlxDevice::swapBuffers()
 {
-	eglSwapBuffers( m_pImpl->display, m_pImpl->surface );
+	::eglSwapBuffers( m_pImpl->display, m_pImpl->surface );
 }
 
 } //namespace bbx::graphics

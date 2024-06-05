@@ -9,7 +9,7 @@ sudo apt install libglm-dev
 -lX11 -lGL -lGLEW
 ***********************************************************************/
 
-#include "WindowX11.hpp"
+#include "Window.hpp"
 #include "GlxDevice.hpp"
 
 #include <fmt/format.h>
@@ -41,7 +41,7 @@ int main( const int argc, const char* const* const argv )
 {
 	fmt::print( "Welcome to Raspbery PI 4 OpenGL!\n" );
 
-	bbx::WindowX11 window;
+	bbx::Window window;
 
 	// Set-up OpenGL ES
 	bbx::graphics::GlxDevice glxDevice{ window.handle() };

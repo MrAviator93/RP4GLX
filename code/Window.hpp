@@ -10,13 +10,13 @@ namespace bbx
 {
 
 /// Windows window class wrapper, uses X11 library for implementation.
-class WindowX11
+class Window
 {
 	struct Impl;
 
 public:
-	WindowX11();
-	~WindowX11();
+	Window();
+	~Window();
 
 	void update();
 

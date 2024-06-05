@@ -8,7 +8,6 @@
 namespace bbx::graphics
 {
 
-// OpenGL ES Device Wrapper class.
 class GlxDevice
 {
 	struct Impl;

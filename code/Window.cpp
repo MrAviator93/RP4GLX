@@ -1,4 +1,4 @@
-#include "WindowX11.hpp"
+#include "Window.hpp"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -12,19 +12,19 @@
 namespace bbx
 {
 
-WindowX11::WindowX11()
+Window::Window()
 {
 	createWindow();
 }
 
-WindowX11::~WindowX11()
+Window::~Window()
 {
 	// TODO: Destroy all the stuff ...
 }
 
-void WindowX11::createWindow() noexcept( false )
+void Window::createWindow() noexcept( false )
 {
-	pDisplay = XOpenDisplay( reinterpret_cast< char* >( 0 ) );
+	pDisplay = ::XOpenDisplay( reinterpret_cast< char* >( 0 ) );
 	if( !pDisplay )
 	{
 		throw std::runtime_error( "ERROR: Failed to open display." );
@@ -39,7 +39,7 @@ void WindowX11::createWindow() noexcept( false )
 	int screenID = DefaultScreen( pDisplay );
 	auto rootWindow = DefaultRootWindow( pDisplay );
 
-	XSetWindowAttributes windowAttribs;
+	::XSetWindowAttributes windowAttribs;
 	windowAttribs.border_pixel = BlackPixel( pDisplay, screenID );
 	windowAttribs.background_pixel = BlackPixel( pDisplay, screenID );
 	windowAttribs.override_redirect = true;
@@ -48,7 +48,7 @@ void WindowX11::createWindow() noexcept( false )
 	// CWBackPixel | CWColormap | CWBorderPixel | CWEventMask
 	std::uint32_t mask = CWBackPixel | CWBorderPixel;
 
-	Window w = XCreateWindow(
+	::Window w = ::XCreateWindow(
 		pDisplay, // Display* - Specifies the connection to the X server.
 		rootWindow, // Window - Specifies the parent window.
 		0, // X - coordinate of top-left outside corner of the window's borders and are relative to the inside of the parent window's borders
@@ -64,23 +64,23 @@ void WindowX11::createWindow() noexcept( false )
 	);
 
 	// Register interest in the delete window message (redicrect)
-	Atom wmDelMsg = XInternAtom( pDisplay, "WM_DELETE_WINDOW", false );
-	XSetWMProtocols( pDisplay, w, &wmDelMsg, 1 );
+	::Atom wmDelMsg = ::XInternAtom( pDisplay, "WM_DELETE_WINDOW", false );
+	::XSetWMProtocols( pDisplay, w, &wmDelMsg, 1 );
 	wmDeleteMessage = wmDelMsg;
 
-	XSelectInput( pDisplay, w, KeyPressMask | KeyReleaseMask | KeymapStateMask );
+	::XSelectInput( pDisplay, w, KeyPressMask | KeyReleaseMask | KeymapStateMask );
 
-	XMapWindow( pDisplay, w );
-	XMapRaised( pDisplay, w );
+	::XMapWindow( pDisplay, w );
+	::XMapRaised( pDisplay, w );
 
-	XStoreName( pDisplay, w, "Raspberry Pi 4 X11 OpenGL ES" );
+	::XStoreName( pDisplay, w, "Raspberry Pi 4 X11 OpenGL ES" );
 
 	auto screen1 = ScreenOfDisplay( pDisplay, 0 );
 
 	int x = ( screen1->width - 1200 ) / 2;
 	int y = ( screen1->height - 800 ) / 2;
 
-	XMoveWindow( pDisplay, w, x, y );
+	::XMoveWindow( pDisplay, w, x, y );
 
 	// w is uint64!!!
 	std::uint64_t* a = new std::uint64_t{ static_cast< std::uint64_t >( w ) };
@@ -88,24 +88,24 @@ void WindowX11::createWindow() noexcept( false )
 	m_running = true;
 }
 
-std::uint32_t WindowX11::clientWidth() const
+std::uint32_t Window::clientWidth() const
 {
-	XWindowAttributes gwa;
-	XGetWindowAttributes( pDisplay, *reinterpret_cast< Window* >( m_pWindowHandle ), &gwa );
+	::XWindowAttributes gwa;
+	::XGetWindowAttributes( pDisplay, *reinterpret_cast< ::Window* >( m_pWindowHandle ), &gwa );
 	return static_cast< std::uint32_t >( gwa.width );
 }
 
-std::uint32_t WindowX11::clientHeight() const
+std::uint32_t Window::clientHeight() const
 {
-	XWindowAttributes gwa;
-	XGetWindowAttributes( pDisplay, *reinterpret_cast< Window* >( m_pWindowHandle ), &gwa );
+	::XWindowAttributes gwa;
+	::XGetWindowAttributes( pDisplay, *reinterpret_cast< ::Window* >( m_pWindowHandle ), &gwa );
 	return static_cast< std::uint32_t >( gwa.height );
 }
 
-void WindowX11::update()
+void Window::update()
 {
-	XEvent event;
-	XNextEvent( pDisplay, &event );
+	::XEvent event;
+	::XNextEvent( pDisplay, &event );
 
 	switch( event.type )
 	{
@@ -119,7 +119,7 @@ void WindowX11::update()
 		break;
 	}
 	case KeymapNotify: {
-		XRefreshKeyboardMapping( &event.xmapping );
+		::XRefreshKeyboardMapping( &event.xmapping );
 		break;
 	}
 	case KeyPress: {
