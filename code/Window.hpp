@@ -1,11 +1,11 @@
-#ifndef BBX_WINDOW_X11_HPP__
-#define BBX_WINDOW_X11_HPP__
+#ifndef BBX_WINDOW_WINDOW_HPP__
+#define BBX_WINDOW_WINDOW_HPP__
 
 // C++
 #include <memory>
 #include <cstdint>
 
-namespace bbx
+namespace bbx::window
 {
 
 /// Windows window class wrapper, uses X11 library for implementation.
@@ -33,5 +33,5 @@ private:
 	std::unique_ptr< Impl > m_pImpl;
 };
 
-} // namespace bbx
-#endif // BBX_WINDOW_X11_HPP__
+} // namespace bbx::window
+#endif // BBX_WINDOW_WINDOW_HPP__

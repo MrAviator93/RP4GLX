@@ -1,47 +1,16 @@
-/***********************************************************************
-1. Install the following libs: 
-sudo apt-get install libx11-dev
-sudo apt-get install libglew-dev - not needed !!!
-sudo apt-get install mesa-utils
-sudo apt install libglm-dev
-
-2. Don't forget to link the following libs: 
--lX11 -lGL -lGLEW
-***********************************************************************/
-
 #include "Window.hpp"
 #include "GlxDevice.hpp"
 
-#include <fmt/format.h>
-#include <date/date.h>
-
-// Window related libs
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/keysymdef.h>
-#include <X11/Xatom.h>
-
-// OpenGL related libs
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
-#include <GLES3/gl3.h>
-
-// Maths libraries
-#include <glm/vec3.hpp>
-
-#include <iostream>
+// C++
 #include <vector>
-#include <string>
-#include <thread>
-#include <chrono>
-#include <stdio.h>
-#include <math.h>
+#include <string_view>
 
 int main( const int argc, const char* const* const argv )
 {
-	fmt::print( "Welcome to Raspbery PI 4 OpenGL!\n" );
+	using Args = std::vector< std::string_view >;
+	[[maybe_unused]] const Args args{ argv, std::next( argv, static_cast< std::ptrdiff_t >( argc ) ) };
 
-	bbx::Window window;
+	bbx::window::Window window;
 
 	// Set-up OpenGL ES
 	bbx::graphics::GlxDevice glxDevice{ window.handle() };

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <stdexcept>
 
-namespace bbx
+namespace bbx::window
 {
 
 struct Window::Impl
@@ -82,7 +82,7 @@ void Window::createWindow() noexcept( false )
 	::XMapWindow( pDisplay, w );
 	::XMapRaised( pDisplay, w );
 
-	::XStoreName( pDisplay, w, "Raspberry Pi 4 X11 OpenGL ES" );
+	::XStoreName( pDisplay, w, "Raspberry Pi 4 & 5 X11 OpenGL ES" );
 
 	auto screen1 = ScreenOfDisplay( pDisplay, 0 );
 
@@ -90,6 +90,8 @@ void Window::createWindow() noexcept( false )
 	int y = ( screen1->height - 800 ) / 2;
 
 	::XMoveWindow( pDisplay, w, x, y );
+
+	m_pImpl->pDisplay = pDisplay;
 
 	// w is uint64!!!
 	std::uint64_t* a = new std::uint64_t{ static_cast< std::uint64_t >( w ) };
@@ -154,4 +156,4 @@ void Window::update()
 	}
 }
 
-} // namespace bbx
+} // namespace bbx::window

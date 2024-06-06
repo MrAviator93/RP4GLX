@@ -22,7 +22,6 @@ public:
 
 	void render();
 
-	void clear( std::uint32_t mask );
 	void clearColourDepthStencil();
 
 	void swapBuffers();

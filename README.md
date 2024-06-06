@@ -9,11 +9,8 @@ A project that demonstrates how to create a X11 window on RP4 and execute OpenGL
 - [Raspberry Pi 4 \& 5 Open Glx Tutorial](#raspberry-pi-4--5-open-glx-tutorial)
   - [Table of contents](#table-of-contents)
   - [Requirements](#requirements)
-    - [Boost](#boost)
-    - [Fmt](#fmt)
-    - [Date](#date)
+  - [Dependencies](#dependencies)
     - [X11](#x11)
-    - [Glm](#glm)
     - [Mesa Utils](#mesa-utils)
   - [Resources](#resources)
   - [License](#license)
@@ -23,27 +20,7 @@ A project that demonstrates how to create a X11 window on RP4 and execute OpenGL
 - A C++20 compliant compiler (GCC-13.2, Clang-17, etc.).
 - Raspberry Pi 4
 
-### Boost
-
-Use the following command to install boost libraries:
-
-```bash
-sudo apt-get install libboost*.**-dev
-```
-
-For latest version of boost libraries see <https://www.boost.org/>
-
-### Fmt
-
-For fmtlib, clone the following repository <https://github.com/fmtlib/fmt> or install using package manager
-
-```bash
-sudo apt-get install libfmt-dev
-```
-
-### Date
-
-For date library, clone the following repository <https://github.com/HowardHinnant/date>
+## Dependencies
 
 ### X11
 
@@ -51,14 +28,6 @@ For X11 windowing system install the x11 library:
 
 ```bash
 sudo apt-get install libx11-dev
-```
-
-### Glm
-
-Additionaly, it won't hurt to install glm library for any math's related operations:
-
-```bash
-sudo apt-get install libglm-dev
 ```
 
 ### Mesa Utils
