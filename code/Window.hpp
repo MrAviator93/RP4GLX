@@ -2,9 +2,8 @@
 #define BBX_WINDOW_X11_HPP__
 
 // C++
+#include <memory>
 #include <cstdint>
-
-struct _XDisplay;
 
 namespace bbx
 {
@@ -16,23 +15,22 @@ class Window
 
 public:
 	Window();
+
 	~Window();
 
 	void update();
 
+	[[nodiscard]] void* handle() const;
+	[[nodiscard]] bool running() const;
+
 	[[nodiscard]] std::uint32_t clientWidth() const;
 	[[nodiscard]] std::uint32_t clientHeight() const;
-	[[nodiscard]] bool running() const { return m_running; }
-	[[nodiscard]] void* handle() const { return m_pWindowHandle; }
 
 private:
 	void createWindow() noexcept( false );
 
 private:
-	_XDisplay* pDisplay{ nullptr };
-	void* m_pWindowHandle{ nullptr }; // Window
-	bool m_running{ false };
-	std::uint64_t wmDeleteMessage;
+	std::unique_ptr< Impl > m_pImpl;
 };
 
 } // namespace bbx

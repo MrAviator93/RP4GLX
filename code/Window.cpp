@@ -12,7 +12,16 @@
 namespace bbx
 {
 
+struct Window::Impl
+{
+	_XDisplay* pDisplay{ nullptr };
+	void* pWindowHandle{ nullptr }; // Window
+	bool running{ false };
+	std::uint64_t wmDeleteMessage;
+};
+
 Window::Window()
+	: m_pImpl{ std::make_unique< Impl >() }
 {
 	createWindow();
 }
@@ -24,7 +33,7 @@ Window::~Window()
 
 void Window::createWindow() noexcept( false )
 {
-	pDisplay = ::XOpenDisplay( reinterpret_cast< char* >( 0 ) );
+	auto pDisplay = ::XOpenDisplay( reinterpret_cast< char* >( 0 ) );
 	if( !pDisplay )
 	{
 		throw std::runtime_error( "ERROR: Failed to open display." );
@@ -66,7 +75,7 @@ void Window::createWindow() noexcept( false )
 	// Register interest in the delete window message (redicrect)
 	::Atom wmDelMsg = ::XInternAtom( pDisplay, "WM_DELETE_WINDOW", false );
 	::XSetWMProtocols( pDisplay, w, &wmDelMsg, 1 );
-	wmDeleteMessage = wmDelMsg;
+	m_pImpl->wmDeleteMessage = wmDelMsg;
 
 	::XSelectInput( pDisplay, w, KeyPressMask | KeyReleaseMask | KeymapStateMask );
 
@@ -84,36 +93,46 @@ void Window::createWindow() noexcept( false )
 
 	// w is uint64!!!
 	std::uint64_t* a = new std::uint64_t{ static_cast< std::uint64_t >( w ) };
-	m_pWindowHandle = reinterpret_cast< void* >( a );
-	m_running = true;
+	m_pImpl->pWindowHandle = reinterpret_cast< void* >( a );
+	m_pImpl->running = true;
+}
+
+void* Window::handle() const
+{
+	return m_pImpl->pWindowHandle;
+}
+
+bool Window::running() const
+{
+	return m_pImpl->running;
 }
 
 std::uint32_t Window::clientWidth() const
 {
 	::XWindowAttributes gwa;
-	::XGetWindowAttributes( pDisplay, *reinterpret_cast< ::Window* >( m_pWindowHandle ), &gwa );
+	::XGetWindowAttributes( m_pImpl->pDisplay, *reinterpret_cast< ::Window* >( m_pImpl->pWindowHandle ), &gwa );
 	return static_cast< std::uint32_t >( gwa.width );
 }
 
 std::uint32_t Window::clientHeight() const
 {
 	::XWindowAttributes gwa;
-	::XGetWindowAttributes( pDisplay, *reinterpret_cast< ::Window* >( m_pWindowHandle ), &gwa );
+	::XGetWindowAttributes( m_pImpl->pDisplay, *reinterpret_cast< ::Window* >( m_pImpl->pWindowHandle ), &gwa );
 	return static_cast< std::uint32_t >( gwa.height );
 }
 
 void Window::update()
 {
 	::XEvent event;
-	::XNextEvent( pDisplay, &event );
+	::XNextEvent( m_pImpl->pDisplay, &event );
 
 	switch( event.type )
 	{
 	case ClientMessage: {
 		// We need to intercept close "X" event
-		if( event.xclient.data.l[ 0 ] == static_cast< long int >( wmDeleteMessage ) )
+		if( event.xclient.data.l[ 0 ] == static_cast< long int >( m_pImpl->wmDeleteMessage ) )
 		{
-			m_running = false;
+			m_pImpl->running = false;
 			break;
 		}
 		break;
@@ -125,7 +144,7 @@ void Window::update()
 	case KeyPress: {
 		if( event.xkey.keycode == 9 ) // ESP
 		{
-			m_running = false;
+			m_pImpl->running = false;
 		}
 		break;
 	}
