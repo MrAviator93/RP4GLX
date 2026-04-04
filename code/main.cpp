@@ -14,13 +14,14 @@ int main( const int argc, const char* const* const argv )
 
 	// Set-up OpenGL ES
 	bbx::graphics::GlxDevice glxDevice{ window.handle() };
-	glxDevice.viewport( 0, 0, 1200, 800 );
+	glxDevice.viewport( 0, 0, window.clientWidth(), window.clientHeight() );
 	glxDevice.clearColourDepthStencil();
 	glxDevice.clearColour( 0.24, 0.14, 0.24, 1.0f );
 
 	while( window.running() )
 	{
 		window.update();
+		glxDevice.viewport( 0, 0, window.clientWidth(), window.clientHeight() );
 		glxDevice.clearColourDepthStencil();
 		glxDevice.clearColour( 0.24, 0.14, 0.24, 1.0f );
 		glxDevice.render();

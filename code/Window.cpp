@@ -18,6 +18,8 @@ struct Window::Impl
 	void* pWindowHandle{ nullptr }; // Window
 	bool running{ false };
 	std::uint64_t wmDeleteMessage;
+	std::uint32_t width{ 1200 };
+	std::uint32_t height{ 800 };
 };
 
 Window::Window()
@@ -51,11 +53,11 @@ void Window::createWindow() noexcept( false )
 	::XSetWindowAttributes windowAttribs;
 	windowAttribs.border_pixel = BlackPixel( pDisplay, screenID );
 	windowAttribs.background_pixel = BlackPixel( pDisplay, screenID );
-	windowAttribs.override_redirect = true;
-	windowAttribs.event_mask = ExposureMask;
+	windowAttribs.override_redirect = false;
+	windowAttribs.event_mask = ExposureMask | StructureNotifyMask;
 
 	// CWBackPixel | CWColormap | CWBorderPixel | CWEventMask
-	std::uint32_t mask = CWBackPixel | CWBorderPixel;
+	std::uint32_t mask = CWBackPixel | CWBorderPixel | CWEventMask;
 
 	::Window w = ::XCreateWindow(
 		pDisplay, // Display* - Specifies the connection to the X server.
@@ -77,7 +79,7 @@ void Window::createWindow() noexcept( false )
 	::XSetWMProtocols( pDisplay, w, &wmDelMsg, 1 );
 	m_pImpl->wmDeleteMessage = wmDelMsg;
 
-	::XSelectInput( pDisplay, w, KeyPressMask | KeyReleaseMask | KeymapStateMask );
+	::XSelectInput( pDisplay, w, KeyPressMask | KeyReleaseMask | KeymapStateMask | StructureNotifyMask );
 
 	::XMapWindow( pDisplay, w );
 	::XMapRaised( pDisplay, w );
@@ -111,16 +113,12 @@ bool Window::running() const
 
 std::uint32_t Window::clientWidth() const
 {
-	::XWindowAttributes gwa;
-	::XGetWindowAttributes( m_pImpl->pDisplay, *reinterpret_cast< ::Window* >( m_pImpl->pWindowHandle ), &gwa );
-	return static_cast< std::uint32_t >( gwa.width );
+	return m_pImpl->width;
 }
 
 std::uint32_t Window::clientHeight() const
 {
-	::XWindowAttributes gwa;
-	::XGetWindowAttributes( m_pImpl->pDisplay, *reinterpret_cast< ::Window* >( m_pImpl->pWindowHandle ), &gwa );
-	return static_cast< std::uint32_t >( gwa.height );
+	return m_pImpl->height;
 }
 
 void Window::update()
@@ -148,6 +146,11 @@ void Window::update()
 		{
 			m_pImpl->running = false;
 		}
+		break;
+	}
+	case ConfigureNotify: {
+		m_pImpl->width = static_cast< std::uint32_t >( event.xconfigure.width );
+		m_pImpl->height = static_cast< std::uint32_t >( event.xconfigure.height );
 		break;
 	}
 	case KeyRelease: {
