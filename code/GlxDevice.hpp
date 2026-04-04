@@ -20,8 +20,6 @@ public:
 	void viewport( int x, int y, std::uint32_t width, std::uint32_t height );
 	void clearColour( float r, float g, float b, float a = 1.0f );
 
-	void render();
-
 	void clearColourDepthStencil();
 
 	void swapBuffers();

@@ -1,5 +1,6 @@
 #include "Window.hpp"
 #include "GlxDevice.hpp"
+#include "GlxRender.hpp"
 
 // C++
 #include <vector>
@@ -14,6 +15,7 @@ int main( const int argc, const char* const* const argv )
 
 	// Set-up OpenGL ES
 	bbx::graphics::GlxDevice glxDevice{ window.handle() };
+	bbx::graphics::GlxRender glxRender{ glxDevice };
 	glxDevice.viewport( 0, 0, window.clientWidth(), window.clientHeight() );
 	glxDevice.clearColourDepthStencil();
 	glxDevice.clearColour( 0.24, 0.14, 0.24, 1.0f );
@@ -24,7 +26,7 @@ int main( const int argc, const char* const* const argv )
 		glxDevice.viewport( 0, 0, window.clientWidth(), window.clientHeight() );
 		glxDevice.clearColourDepthStencil();
 		glxDevice.clearColour( 0.24, 0.14, 0.24, 1.0f );
-		glxDevice.render();
+		glxRender.render();
 		glxDevice.swapBuffers();
 	}
 

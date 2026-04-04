@@ -24,6 +24,7 @@ find_package(Threads REQUIRED)
 # Source files
 set(SOURCES
     main.cpp
+    GlxRender.cpp
     GlxDevice.cpp
     GlxContext.cpp
     Window.cpp
