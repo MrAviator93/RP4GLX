@@ -4,7 +4,12 @@
 #include <GLES3/gl3.h>
 
 // C++
-#include <string_view>
+#include <filesystem>
+#include <fstream>
+#include <optional>
+#include <sstream>
+#include <stdexcept>
+#include <string>
 
 namespace bbx::graphics
 {
@@ -12,26 +17,18 @@ namespace bbx::graphics
 namespace
 {
 
-constexpr std::string_view kVertexShader = R"(
-#version 310 es
-layout (location = 0) in vec3 aPos;
-
-void main()
+std::optional< std::string > loadShaderSource( const std::filesystem::path& shaderPath )
 {
-    gl_Position = vec4(aPos, 1.0);
-}
-)";
+	std::ifstream file( shaderPath, std::ios::in | std::ios::binary );
+	if( !file )
+	{
+		return std::nullopt;
+	}
 
-constexpr std::string_view kFragmentShader = R"(
-#version 310 es
-precision mediump float;
-out vec4 FragColor;
-
-void main()
-{
-    FragColor = vec4(1.0, 0.5, 0.2, 1.0);
+	std::ostringstream content;
+	content << file.rdbuf();
+	return content.str();
 }
-)";
 
 } // namespace
 
@@ -52,14 +49,27 @@ GlxRender::GlxRender( GlxDevice& device ) noexcept( false )
 {
 	GLfloat vertices[] = { 0.0f, 0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f };
 
+	const std::filesystem::path shaderDir = "data/shaders";
+	const auto vertexShaderSource = loadShaderSource( shaderDir / "triangle.vert" );
+	if( !vertexShaderSource )
+	{
+		throw std::runtime_error( "Failed to load vertex shader: " + ( shaderDir / "triangle.vert" ).string() );
+	}
+
 	GLuint vertexShader = ::glCreateShader( GL_VERTEX_SHADER );
-	const char* vertexShaderSrc = kVertexShader.data();
-	::glShaderSource( vertexShader, 1, &vertexShaderSrc, nullptr );
+	const char* vertexShaderSrcCStr = vertexShaderSource->c_str();
+	::glShaderSource( vertexShader, 1, &vertexShaderSrcCStr, nullptr );
 	::glCompileShader( vertexShader );
 
+	const auto fragmentShaderSource = loadShaderSource( shaderDir / "triangle.frag" );
+	if( !fragmentShaderSource )
+	{
+		throw std::runtime_error( "Failed to load fragment shader: " + ( shaderDir / "triangle.frag" ).string() );
+	}
+
 	GLuint fragmentShader = ::glCreateShader( GL_FRAGMENT_SHADER );
-	const char* fragmentShaderSrc = kFragmentShader.data();
-	::glShaderSource( fragmentShader, 1, &fragmentShaderSrc, nullptr );
+	const char* fragmentShaderSrcCStr = fragmentShaderSource->c_str();
+	::glShaderSource( fragmentShader, 1, &fragmentShaderSrcCStr, nullptr );
 	::glCompileShader( fragmentShader );
 
 	m_pImpl->shaderProgram = ::glCreateProgram();
